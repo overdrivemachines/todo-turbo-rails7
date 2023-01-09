@@ -1,14 +1,15 @@
-<div class="w-full">
+<div class="mx-auto max-w-3xl mt-24">
+  <div class="mb-6">
+    <h1 class="font-bold text-4xl">Turbo Todos</h1>
+  </div>
+
   <% if notice.present? %>
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Todos</h1>
-    <%= link_to 'New todo', new_todo_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
+  <%= render "form", todo: Todo.new %>
 
-  <div id="todos" class="min-w-full">
+  <div id="todos" class="divide-y list-none">
     <%= render @todos %>
   </div>
 </div>
