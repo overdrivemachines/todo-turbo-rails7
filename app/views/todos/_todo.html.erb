@@ -1,3 +1,5 @@
-<li id="<%= dom_id todo %>" class="py-3">
-  <%= todo.title %>
+<li id="<%= "#{dom_id(todo)}_item" %>" class="py-3">
+  <%= turbo_frame_tag dom_id(todo) do %>
+    <%= link_to todo.title, edit_todo_path(todo) %>
+  <% end %>
 </li>
