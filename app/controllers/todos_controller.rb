@@ -1,8 +1,10 @@
 class TodosController < ApplicationController
   before_action :set_todo, only: %i[ edit update destroy ]
+  # after_update_commit { broadcast_append_to 'todos' }
 
   # GET /todos
   def index
+    # @todos = Todo.in_order_of(:status, %w[incomplete complete])
     @todos = Todo.all
   end
 
