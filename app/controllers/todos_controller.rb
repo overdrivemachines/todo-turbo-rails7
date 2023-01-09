@@ -18,6 +18,10 @@ class TodosController < ApplicationController
         format.turbo_stream
         format.html { redirect_to todo_url(@todo), notice: "Todo was successfully created." }
       else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form",
+                                                                                     locals: { todo: @todo })
+        end
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -25,17 +29,30 @@ class TodosController < ApplicationController
 
   # PATCH/PUT /todos/1
   def update
-    if @todo.update(todo_params)
-      redirect_to @todo, notice: "Todo was successfully updated."
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @todo.update(todo_params)
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_item", partial: "todo",
+                                                                                     locals: { todo: @todo })
+        end
+        format.html { redirect_to todo_url(@todo), notice: "Todo was successfully updated." }
+      else
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace("#{helpers.dom_id(@todo)}_form", partial: "form",
+                                                                                     locals: { todo: @todo })
+        end
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
   # DELETE /todos/1
   def destroy
     @todo.destroy
-    redirect_to todos_url, notice: "Todo was successfully destroyed."
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("#{helpers.dom_id(@todo)}_item") }
+      format.html { redirect_to todos_url, notice: "Todo was successfully destroyed." }
+    end
   end
 
   private
